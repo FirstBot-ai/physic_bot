@@ -12,7 +12,7 @@ questions = [
 def ask_gigachat(prompt):
     url = "https://gigachat.devices.sberbank.ru/api/v1/chat/completions"
     headers = {
-        "Authorization": f"Bearer {os.environ['API_TOKEN']}",
+        "Authorization": f"Bearer {os.environ['MDE5Y2MzOTItZDU4MS03M2I3LWE1MDItNjUyNGIxNzIyYjEwOmM5OTJiN2VkLWMxOGEtNDk1Ny1hZGQwLTEwZmM5Mjk2MDY1Zg==']}",
         "Content-Type": "application/json"
     }
     data = {
