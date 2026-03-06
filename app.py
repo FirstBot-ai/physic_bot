@@ -162,13 +162,13 @@ questions = [
     }
 ]
 
-# История чата
-if "history" not in st.session_state:
+# Инициализация истории чата
+if 'history' not in st.session_state:
     st.session_state.history = []
 
 # Функция для запроса к API ГигаЧата
 def ask_gigachat(prompt):
-    url = "https://gigachat.devices.sberbank.ru/api/v1/chat/completions"  # Замените на реальный URL API
+    url = "https://gigachat.devices.sberbank.ru/api/v1/chat/completions"
     headers = {
         "Authorization": f"Bearer {os.environ['API_TOKEN']}",
         "Content-Type": "application/json"
@@ -207,6 +207,7 @@ if st.button("Отправить вопрос"):
 if st.button("🎲 Задать случайный вопрос"):
     question = random.choice(questions)
     st.session_state.history.append(f"Бот: {question['question']} (Варианты: {', '.join(question['options'])})")
+
     user_answer = st.text_input("Ваш ответ:")
     if user_answer:
         if user_answer.lower() == question["answer"].lower():
