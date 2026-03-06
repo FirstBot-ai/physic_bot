@@ -5,29 +5,49 @@ import os
 
 # Массив из 30 вопросов по физике
 questions = [
-    # ... (твой массив вопросов остаётся без изменений)
+    {
+        "question": "Что измеряет амперметр?",
+        "options": ["Напряжение", "Сила тока", "Сопротивление", "Мощность"],
+        "answer": "Сила тока"
+    },
+    {
+        "question": "Какая единица измерения силы?",
+        "options": ["Килограмм", "Ньютон", "Джоуль", "Ватт"],
+        "answer": "Ньютон"
+    },
+    # ... (остальные вопросы оставляете без изменений)
 ]
 
 # Функция для запроса к API ГигаЧата
 def ask_gigachat(prompt):
     url = "https://gigachat.devices.sberbank.ru/api/v1/chat/completions"
+    token = os.environ.get('API_TOKEN')
+    st.write("Отладочная информация:")
+    st.write(f"Токен (первые 5 символов): {token[:5]}...")  # Для безопасности выводим только начало токена
+    st.write(f"URL: {url}")
+
     headers = {
-        "Authorization": f"Token {os.environ['API_TOKEN']}",
-        "Content-Type": "application/json"
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
+        "Accept": "application/json"
     }
     data = {
-        "model": "GigaChat",
-        "messages": [{"role": "user", "content": prompt}]
+        "model": "GigaChat-Pro",
+        "messages": [{"role": "user", "content": prompt}],
+        "temperature": 0.7
     }
 
     try:
-        response = requests.post(url, headers=headers, json=data, verify=False)  # <-- Отключена проверка SSL
+        response = requests.post(url, headers=headers, json=data, verify=False)
+        st.write(f"Status Code: {response.status_code}")
+        st.write(f"Response: {response.text}")
+
         if response.status_code == 200:
             return response.json()["choices"][0]["message"]["content"]
         else:
-            return f"Извините, не удалось получить ответ от API. Код ошибки: {response.status_code}"
+            return f"Ошибка API: {response.status_code}. Ответ: {response.text}"
     except Exception as e:
-        return f"Произошла ошибка: {e}"
+        return f"Исключение: {e}"
 
 # Основной интерфейс
 st.title("🤖 Бот по физике")
