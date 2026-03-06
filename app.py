@@ -1,7 +1,9 @@
 import streamlit as st
 import random
+import requests
+import os
 
-# Массив вопросов по физике
+# Массив из 30 вопросов по физике
 questions = [
     {
         "question": "Что измеряет амперметр?",
@@ -164,10 +166,26 @@ questions = [
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# Функция для запроса к API ГигаЧата (заглушка)
+# Функция для запроса к API ГигаЧата
 def ask_gigachat(prompt):
-    # Здесь должен быть реальный вызов API ГигаЧата
-    return f"Ответ на вопрос: {prompt}"
+    url = "https://gigachat.devices.sberbank.ru/api/v1/chat/completions"  # Замените на реальный URL API
+    headers = {
+        "Authorization": f"Bearer {os.environ['API_TOKEN']}",
+        "Content-Type": "application/json"
+    }
+    data = {
+        "model": "GigaChat",
+        "messages": [{"role": "user", "content": prompt}]
+    }
+
+    try:
+        response = requests.post(url, headers=headers, json=data)
+        if response.status_code == 200:
+            return response.json()["choices"][0]["message"]["content"]
+        else:
+            return f"Извините, не удалось получить ответ от API. Код ошибки: {response.status_code}"
+    except Exception as e:
+        return f"Произошла ошибка: {e}"
 
 # Основной интерфейс
 st.title("🤖 Бот по физике")
