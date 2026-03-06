@@ -162,10 +162,6 @@ questions = [
     }
 ]
 
-# Инициализация истории чата
-if 'history' not in st.session_state:
-    st.session_state.history = []
-
 # Функция для запроса к API ГигаЧата
 def ask_gigachat(prompt):
     url = "https://gigachat.devices.sberbank.ru/api/v1/chat/completions"
@@ -197,25 +193,18 @@ if st.button("Отправить вопрос"):
     if user_input:
         if any(word in user_input.lower() for word in ["физик", "сила", "ток", "энергия", "скорость", "давление"]):
             answer = ask_gigachat(user_input)
-            st.session_state.history.append(f"Вы: {user_input}")
-            st.session_state.history.append(f"Бот: {answer}")
+            st.write(f"Бот: {answer}")
         else:
-            st.session_state.history.append(f"Вы: {user_input}")
-            st.session_state.history.append("Бот: Давайте обсудим физику!")
+            st.write("Бот: Давайте обсудим физику!")
 
 # Кнопка для случайного вопроса
 if st.button("🎲 Задать случайный вопрос"):
     question = random.choice(questions)
-    st.session_state.history.append(f"Бот: {question['question']} (Варианты: {', '.join(question['options'])})")
+    st.write(f"Бот: {question['question']} (Варианты: {', '.join(question['options'])})")
 
     user_answer = st.text_input("Ваш ответ:")
     if user_answer:
         if user_answer.lower() == question["answer"].lower():
-            st.session_state.history.append("Бот: Правильно!")
+            st.write("Бот: Правильно!")
         else:
-            st.session_state.history.append(f"Бот: Неправильно. Правильный ответ: {question['answer']}")
-
-# Отображение истории чата
-st.subheader("История чата:")
-for message in st.session_state.history:
-    st.text(message)
+            st.write(f"Бот: Неправильно. Правильный ответ: {question['answer']}")
